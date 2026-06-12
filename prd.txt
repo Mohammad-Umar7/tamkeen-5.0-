@@ -1,0 +1,185 @@
+# Product Requirements Document (PRD)
+
+## Product Name: Curriculum Bridge *(working title)*
+
+**Tagline:** "AI proposes, professors approve, students build."
+
+**Hackathon Track:** AI for Education & Skills (UAE Youth Hackathon)
+
+**Version:** 1.0 — Hackathon MVP
+
+---
+
+## 1. Problem Statement
+
+University curricula update every 4–7 years, while industry skill demands shift every 6–12 months. Students graduate with outdated skills, and universities have no data-driven way to know *what* is outdated or *how* to fix it. Existing ed-tech tools (Coursera, LinkedIn Learning, AI tutors) patch the **student** — nobody patches the **curriculum** itself.
+
+## 2. Solution Overview
+
+Curriculum Bridge is a multi-agent AI system that plugs into a university's curriculum for each major, continuously compares it against live job-market data, and:
+
+1. Generates a **Curriculum Health Report** for the university (what's outdated, missing, or still relevant)
+2. Recommends **semester-specific, skill-targeted projects** for students — every recommendation comes with an explainable **rationale card**
+3. Routes all AI recommendations through a **professor approval workflow** (human-in-the-loop) before anything reaches students
+4. Gives each student a **Skill Gap Profile**, a context-aware **AI Tutor**, **project communities**, and **verified skill badges** earned by completing real projects
+
+**Key differentiator:** Every other tool fixes the student. We fix the institution — with professors in control.
+
+---
+
+## 3. Goals & Success Metrics
+
+| Goal | Metric (Demo/MVP) |
+|---|---|
+| Show curriculum is measurably outdated | Health Report with % skill coverage vs. market |
+| Personalization quality | Each student sees a gap map unique to major + semester |
+| Learning effectiveness | Skill score increases after project completion |
+| Human oversight (responsible AI) | 100% of recommendations pass professor approval before publishing |
+| UAE alignment | Skills mapped to UAE job-market data; supports UAE Centennial 2071 / national skills agenda |
+
+---
+
+## 4. Users & Roles
+
+| Role | What they do |
+|---|---|
+| **Student** | Views skill gap profile, receives approved projects, uses AI tutor, joins project communities, earns skill badges |
+| **Professor / Head of Major** | Reviews AI recommendations (projects + curriculum changes), approves / edits / rejects with feedback |
+| **University Admin (optional, post-MVP)** | Views institution-wide Curriculum Health Reports across majors |
+
+---
+
+## 5. Multi-Agent Architecture (5 Agents)
+
+### Agent 1 — Market Research Agent
+- **Input:** Major name (e.g., Software Engineering)
+- **Job:** Scrapes/analyzes UAE job postings, LinkedIn skill trends, and industry reports. Outputs a ranked, weighted list of in-demand skills with frequency data (e.g., "REST APIs — 68% of junior dev postings").
+- **Output:** Market Skills Dataset (refreshed periodically — "live" feed)
+
+### Agent 2 — Curriculum Analyzer Agent
+- **Input:** University curriculum (per major, per semester) + Market Skills Dataset
+- **Job:** Maps every course/topic to skills, compares against the market dataset, flags outdated topics, missing skills, and still-relevant content.
+- **Output:** Curriculum Health Report (per major) + cohort-level gap data (e.g., "80% of SE Sem 2 lacks backend skills")
+
+### Agent 3 — Project Recommendation Agent (Curriculum Engine)
+- **Input:** Curriculum Health Report + semester level + cohort skill gaps
+- **Job:** Designs project recommendations per major **and** per semester (SE Sem 1 ≠ SE Sem 2; all Sem 1 students get the same project pool). Each recommendation includes a **rationale card**: which gap it fills, which market data supports it, how it builds on prior semesters, and skill points awarded.
+- **Output:** Draft project proposals → sent to Approval Queue (never directly to students)
+
+### Agent 4 — Tutor Agent
+- **Input:** Student question + student context (major, semester, current project, skill profile)
+- **Job:** Context-aware tutoring. Answers are specific to the student's project and curriculum — not generic chatbot replies. Guides rather than gives full solutions.
+- **Output:** Tutoring responses inside the student workspace
+
+### Agent 5 — Evaluation & Verification Agent
+- **Input:** Student's submitted project work (code/deliverables)
+- **Job:** Evaluates the actual work against the project's skill objectives. On pass: updates the student's skill score and issues a **verified skill badge** ("built it," not "watched it"). Updates the cohort gap data, which feeds back into Agents 2 & 3.
+- **Output:** Skill badges, updated Skill Gap Profile, progress tracking
+
+### Orchestrator (system layer, not a separate "agent" in the pitch)
+Coordinates agent handoffs: Research → Analyze → Recommend → **Professor Approval Gate** → Publish to Students → Evaluate → feedback loop.
+
+---
+
+## 6. Core Features (Functional Requirements)
+
+### F1 — Curriculum Health Report (University-facing) ⭐ Innovation headline
+- Auto-generated report per major: outdated topics, missing skills, market coverage %
+- Recommended curriculum changes with supporting data
+- Auto-updates as market data refreshes
+
+### F2 — Professor Approval Workflow (Human-in-the-Loop) ⭐ Trust/innovation
+- Dashboard listing all pending AI recommendations
+- Each item shows a **rationale card** (reasoning + data sources)
+- Actions: **Approve / Edit / Reject (with feedback)**
+- Rejection feedback is stored and used to refine future recommendations
+- Nothing reaches students without approval
+
+### F3 — Student Skill Gap Profile
+- Personal gap map: "Your Sem 3 covers X; market wants Y, Z — you're missing these 4 skills"
+- Skill score + progress tracker showing the gap closing over time
+
+### F4 — Project Engine
+- Approved projects assigned by **major + semester + cohort gaps**
+- Same project pool per cohort (enables communities)
+- Completing a project = skill points + badge
+
+### F5 — AI Tutor
+- Embedded in the project workspace; knows the student's project, semester, and gaps
+
+### F6 — Project Communities
+- Auto-created per project per cohort (e.g., "SE Sem 1 — Project A")
+- Discussion, progress sharing, peer help
+- *(Post-MVP: senior students mentor juniors and earn a leadership skill credit)*
+
+### F7 — Verified Skill Badges & Portfolio
+- Badges issued only after Agent 5 evaluates real work
+- Student portfolio page (post-MVP: employer-browsable)
+
+---
+
+## 7. User Flows
+
+**Professor flow:**
+Login → Pending Recommendations → open rationale card → Approve / Edit / Reject → approved items publish to the cohort
+
+**Student flow:**
+Login → see Skill Gap Profile → view assigned project (+ why it was chosen) → work on project → ask AI Tutor when stuck → discuss in community → submit → Agent 5 evaluates → badge + skill score update
+
+**System flow:**
+Market Research Agent (continuous) → Curriculum Analyzer → Project Recommendation Agent → Approval Queue → Students → Evaluation Agent → data feeds back to Analyzer
+
+---
+
+## 8. MVP Scope (Hackathon Demo)
+
+**IN scope:**
+- ONE major: Software Engineering, TWO semesters (Sem 1, Sem 2)
+- Pre-loaded curriculum data; market data can be pre-collected/cached (faked-but-realistic is fine)
+- Working demo of: Health Report, Professor approval dashboard (with rationale card + approve/reject buttons), Student dashboard (gap profile + assigned project), AI Tutor chat, one community feed
+- Skill score updating after a mock project submission
+
+**OUT of scope (mention as roadmap):**
+- All majors / multiple universities
+- Real-time job-board scraping at scale
+- Employer portal, payments, mobile apps
+
+**Demo money-shot (10 seconds that sell it):** Professor opens a rationale card → clicks Approve → project instantly appears on the student dashboard.
+
+---
+
+## 9. Suggested Tech Stack (adjust to team skills)
+
+- **Frontend:** React (two dashboards: professor + student)
+- **Backend:** Node.js or Python (FastAPI)
+- **Agents:** LLM API (e.g., Claude) with an orchestration layer (simple queue or framework like LangGraph/CrewAI)
+- **DB:** Postgres / Supabase (curricula, skills, projects, approvals, badges, community posts)
+- **Market data:** pre-scraped job-posting dataset stored as JSON for the demo
+
+---
+
+## 10. Judging Criteria Mapping
+
+| Criterion | How we hit it |
+|---|---|
+| Learning effectiveness | Skill score + verified badges from real project work |
+| Personalization quality | Gap profile per student; projects per major + semester + cohort gaps |
+| Accessibility | AI tutor available 24/7, context-aware; web-based |
+| UAE education goals | UAE job-market data; institution-level reports usable by universities/Ministry; supports national skills agendas (UAE Centennial 2071) |
+
+---
+
+## 11. Risks & Mitigations
+
+| Risk | Mitigation |
+|---|---|
+| "Why trust AI with curriculum?" | Professor approval gate — AI never decides alone |
+| Market data quality | Cite sources on every rationale card; cached curated dataset for demo |
+| Scope too big for hackathon | MVP locked to 1 major, 2 semesters |
+| Generic AI tutor criticism | Tutor is context-injected with project + curriculum data |
+
+---
+
+## 12. Pitch One-Liner
+
+> "Every ed-tech tool patches the student. We patch the curriculum — with professors in control. AI proposes, professors approve, students build."

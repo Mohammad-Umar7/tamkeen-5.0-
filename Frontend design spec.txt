@@ -1,0 +1,127 @@
+# Frontend Design Spec — Curriculum Bridge
+
+This is the build guide for the UI. Follow it exactly and the product will look like a funded startup, not a hackathon project — and not AI slop either.
+
+---
+
+## 1. Design Direction (the one-paragraph brief)
+
+**Feel:** A calm, confident "academic operating system." Think Linear's discipline + Notion's friendliness, but with its own identity rooted in education: structured like a transcript, alive like a job market. Light theme by default (dark dashboards are the #1 AI-slop tell right now — every AI demo is near-black with one neon accent). A light, paper-like interface instantly reads as credible and education-grade, and it will stand out in a room full of dark-mode hackathon demos.
+
+**The signature element (the one memorable thing):** the **Skill Gap Meter** — a horizontal "bridge" visualization on the student dashboard showing curriculum coverage on the left, market demand on the right, and the gap closing in the middle as the student completes projects. Every other element stays quiet so this one shines. Judges will remember "the bridge."
+
+---
+
+## 2. Design Tokens
+
+### Colors
+| Token | Hex | Use |
+|---|---|---|
+| `--bg` | `#FAFAF7` | App background (warm off-white, not sterile gray) |
+| `--surface` | `#FFFFFF` | Cards, panels |
+| `--ink` | `#1A1D29` | Primary text (near-black with a blue undertone) |
+| `--ink-muted` | `#5C6170` | Secondary text, labels |
+| `--line` | `#E7E5DE` | Borders, dividers (hairline, 1px) |
+| `--primary` | `#1E4FFF` | One strong "academy blue" — buttons, links, active states |
+| `--gap` | `#E8590C` | Burnt orange — used ONLY for skill gaps / outdated flags |
+| `--gained` | `#0F8A4D` | Deep green — used ONLY for gained skills / approvals |
+| `--pending` | `#B07D0A` | Amber — used ONLY for "awaiting professor approval" |
+
+**Rule:** color is information, never decoration. Orange always means "gap," green always means "earned," amber always means "pending." A judge should learn the color language in 10 seconds.
+
+### Typography
+- **Display / headings:** *Sora* or *Bricolage Grotesque* (Google Fonts) — geometric, characterful, not Inter-default
+- **Body / UI:** *Inter* or *IBM Plex Sans* — quiet workhorse
+- **Data / numbers / badges:** *IBM Plex Mono* — skill scores, percentages, and rationale-card stats in mono makes data feel like *evidence*
+
+Type scale: 32 / 24 / 18 / 15 / 13. Headings semi-bold, never all-bold-everywhere.
+
+### Spacing & shape
+- 8px grid. Card padding 24px. Section gaps 32–40px. Generous whitespace = expensive look.
+- Border radius: **10px everywhere** (consistency matters more than the number). No glassmorphism, no heavy drop shadows — use a 1px `--line` border + very soft shadow (`0 1px 3px rgba(0,0,0,0.06)`).
+- Max content width: 1240px, centered.
+
+### Motion (use sparingly — 3 moments only)
+1. Skill Gap Meter animates closed when a badge is earned (600ms ease-out)
+2. Approval action: card slides out of the professor's queue on approve/reject (250ms)
+3. Subtle fade-up on page load for cards (stagger 50ms)
+Nothing else moves. Scattered animation = AI slop.
+
+---
+
+## 3. App Shell
+
+- **Left sidebar (220px, fixed):** logo top; nav items with small line icons (Lucide): Dashboard, My Projects, Skills, Community, Market News, Submissions. Bottom: profile chip (avatar, name, "SE · Semester 2").
+- **Top bar (slim, 56px):** page title left; right side = search, notification bell, and a small **"Cohort: SE Sem 2"** pill so context is always visible.
+- The system already knows the user — there is **no onboarding form** after login. First screen post-login is the dashboard, pre-filled.
+
+---
+
+## 4. Screens
+
+### 4.1 Student Dashboard (the home screen — this wins or loses the demo)
+
+Layout: 12-col grid.
+
+**Row 1 — Greeting + Skill Gap Meter (full width, the hero):**
+- "Good morning, Omar" + one-line status: *"You've closed 3 of 7 market gaps this semester."*
+- Below it, the **Skill Gap Meter (signature element):** a horizontal track. Left node = "Your curriculum," right node = "UAE market (live)." Along the track, skill chips sit either on the green side (gained — e.g. `Git`, `OOP`) or orange side (gap — e.g. `REST APIs`, `Docker`). A progress fill shows % bridged, in mono type: `57% bridged`. Hovering a gap chip shows market data: *"appears in 68% of UAE junior dev postings."*
+
+**Row 2 — two columns (8 / 4):**
+- **Left (8): Current Project card.** Project title, short description, skill tags it unlocks (orange chips that will turn green), progress bar, deadline, and two buttons: `Open workspace` (primary) and `Ask tutor`. Small footer line in muted text: *"Approved by Prof. Al Mansoori · view rationale"* — clicking opens the rationale card in a side drawer. This one line quietly demos your human-in-the-loop story.
+- **Right (4): Skill Score panel.** Big mono number (e.g. `742`), tiny sparkline of growth, and the 3 most recent badges as small circular seals with the skill name.
+
+**Row 3 — two columns (7 / 5):**
+- **Left (7): Market Pulse (trending news).** Feed of 3–4 compact items scoped to the student's major: each = source favicon, headline, one-line "why it matters to you" in muted text (e.g., *"Demand for Rust developers in UAE up 24% this quarter — not yet in your curriculum"*), timestamp. A small `Live` dot in green. This is the "students stay up to date" requirement — framed as intelligence, not a news widget.
+- **Right (5): My Cohort Community.** Latest 3 posts from the student's project community ("SE Sem 2 · Project: Campus API"), avatars, reply counts, `Join discussion` link.
+
+### 4.2 Project Workspace
+- Two-pane: **left 65%** = project brief (objectives, milestones as a checklist, resources, skill tags); **right 35%** = **AI Tutor chat**, permanently docked. Tutor header reads: *"Tutor · knows your project & curriculum"* — that label sells context-awareness without you saying a word.
+- Bottom of left pane: **Submit work** section — drag-and-drop zone (GitHub link or file), shows submission status: `Draft → Submitted → Evaluating → Badge earned`. After evaluation, a clean result card: skills verified (green chips), feedback summary, and the new badge with a subtle one-time shine animation (this is moment #1 from the motion budget — the Gap Meter closing).
+
+### 4.3 Skills Page
+- Full-width version of the Gap Meter at top.
+- Below, a two-column ledger: **"Verified skills"** (green, each with the project that earned it + date — like a transcript) and **"Market gaps"** (orange, each with its market frequency stat and a `See projects that teach this` link).
+- This page = the student's living portfolio. Keep it printable-clean.
+
+### 4.4 Community Page
+- Channels list on the left (one per project per cohort, auto-created). Main feed: simple threaded posts. No reactions overload — just reply and a single "helpful" upvote. Pinned post at top = the project brief.
+
+### 4.5 Professor / Admin Dashboard (separate role view — demo gold)
+- Same shell, different nav: **Approval Queue, Curriculum Health, Cohorts.**
+- **Approval Queue (default screen):** a single centered column of pending **Rationale Cards**, amber left-border. Each card:
+  - Header: project name + target cohort (`SE · Sem 2`)
+  - **Reasoning section** (the star): 3 bullet rationale with mono-type data — *"REST APIs — 68% of UAE junior postings"*, *"Builds on Sem 1: OOP, Git"*, *"Fills cohort gap: 80% lack backend"* — each stat with a tiny source link
+  - Footer: three buttons — `Approve` (green, solid), `Edit` (ghost), `Reject` (ghost, opens a feedback textarea: "Tell the system why — it learns from this")
+  - On approve: card slides out, toast: *"Published to SE Sem 2 — 34 students."* **This is the 10-second money shot.** Then cut to the student dashboard where the project now appears.
+- **Curriculum Health:** report view per major — coverage % donut, list of outdated topics (orange), missing skills with market stats, and an `Export report` button (implies Ministry/university use).
+
+---
+
+## 5. UX Best Practices Checklist (do all of these)
+
+- **Zero empty dead-ends:** every empty state has one sentence + one action ("No submissions yet — open your project workspace").
+- **Buttons say what they do:** `Approve & publish`, `Submit project`, `Ask tutor` — never "OK"/"Submit."
+- **Consistent vocabulary:** it's always "gap," "verified skill," "rationale," "cohort" — same words in UI, pitch, and PRD.
+- **Loading = skeletons,** not spinners (skeleton cards in the queue/feed look pro).
+- **Toasts for every action,** matching the button's verb ("Published," "Submitted," "Rejected — feedback saved").
+- **Keyboard focus visible,** real `:focus-visible` rings in `--primary`.
+- **Responsive floor:** must look fine at 1280px laptop (judges' screen); sidebar collapses to icons below 1024px. Don't burn time on mobile.
+- **Real-ish content everywhere:** real UAE-flavored names, real skill names, real-sounding headlines. Lorem ipsum or "Project 1 / User 123" = instant amateur.
+
+## 6. What to avoid (the AI-slop blacklist)
+
+- ❌ Near-black background + single neon purple/green accent
+- ❌ Glassmorphism, heavy gradients, glowing borders
+- ❌ Emoji as icons (use Lucide line icons)
+- ❌ 5 different border radii and 4 shades of gray with no system
+- ❌ Animations on everything
+- ❌ Giant vague hero text ("Empowering the future of learning ✨") — your hero is the Gap Meter showing *real data*, not a slogan
+
+---
+
+## 7. Build notes
+
+- React + Tailwind. Define the tokens above as CSS variables / Tailwind theme first, before any screen.
+- Lucide icons, Recharts (or plain SVG) for the Gap Meter and sparkline.
+- Build order for the demo: **Student Dashboard → Professor Approval Queue → Project Workspace (with tutor + submission)**. Skills/Community/News can be partially static — they just need to look real on screen.
