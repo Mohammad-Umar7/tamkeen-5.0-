@@ -28,16 +28,24 @@ export function BridgeMark({ size = 34 }) {
 }
 
 const NAV = [
-  { to: "/", label: "Dashboard", end: true },
+  { to: "/dashboard", label: "Dashboard", end: true },
   { to: "/health", label: "Curriculum Health" },
   { to: "/queue", label: "Approval Queue" },
   { to: "/reports", label: "Reports" },
+  { to: "/admin", label: "Admin" },
 ];
 
 function TopNav() {
   const { state } = useApp();
   const navigate = useNavigate();
   const isProfessor = state.role === "professor";
+
+  const filteredNav = NAV.filter(item => {
+    if (item.to === "/queue") {
+      return isProfessor;
+    }
+    return true;
+  });
 
   return (
     <header className="bg-surface border-b border-line sticky top-0 z-30">
@@ -54,7 +62,7 @@ function TopNav() {
         </button>
 
         <nav className="hidden md:flex items-center gap-8 ml-auto">
-          {NAV.map(({ to, label, end }) => (
+          {filteredNav.map(({ to, label, end }) => (
             <NavLink
               key={to}
               to={to}
@@ -129,7 +137,7 @@ export function RoleToggle() {
 
   const setRole = (role) => {
     dispatch({ type: "role/set", role });
-    navigate(role === "professor" ? "/queue" : "/");
+    navigate(role === "professor" ? "/queue" : "/dashboard");
   };
 
   return (

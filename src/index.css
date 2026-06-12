@@ -150,3 +150,86 @@
   background: #0fae64;
   animation: pulse-dot 2.2s infinite;
 }
+
+/* High-end Glassmorphism Design Utilities */
+.glass-card {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(20, 46, 77, 0.06);
+}
+
+.glass-card-dark {
+  background: rgba(14, 34, 56, 0.75);
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 12px 40px 0 rgba(14, 34, 56, 0.25);
+}
+
+.glass-nav {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(20, 46, 77, 0.08);
+}
+
+/* Floating micro-animations */
+@keyframes float-animation {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(0.5deg);
+  }
+}
+
+.animate-float-slow {
+  animation: float-animation 6s ease-in-out infinite;
+}
+
+.animate-float-medium {
+  animation: float-animation 4.5s ease-in-out infinite;
+}
+
+/* Subtle glow pulse */
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.15;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(1.05);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 8s ease-in-out infinite;
+}
+
+/* Slide in animation */
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes draw-progress {
+  from {
+    width: 0%;
+  }
+}
+.animate-progress-draw {
+  animation: draw-progress 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
